@@ -1,18 +1,17 @@
 
-//  функция открытие попап окна
-function openPopup(popupElement) {
+export function openPopup(popupElement) {
     popupElement.classList.add('popup_is-opened');
     document.addEventListener('keydown', closeOnEscape);
 }
 
-//  функция закрытия попап окна
 
-function closePopup(popupElement) {
+export function closePopup(popupElement) {
     popupElement.classList.remove('popup_is-opened');
     document.removeEventListener('keydown', closeOnEscape);
 }
-//  функция закрытия попап окна ESC
-function closeOnEscape(event) {
+
+
+export function closeOnEscape(event) {
     if (event.key === 'Escape') {
         const openedPopup = document.querySelector('.popup_is-opened');
         if (openedPopup) {
@@ -21,11 +20,8 @@ function closeOnEscape(event) {
     }
 }
 
-function closePopupOnOverlayClick(event) {
-    // Проверяем, был ли клик на элементе с классом 'popup' (оверлей)
+export function closePopupOnOverlayClick(event) {
     if (event.target.classList.contains('popup')) {
-        closePopup(event.target); // Закрываем попап
+        closePopup(event.target);
     }
 }
-
-export { openPopup, closePopup, closeOnEscape, closePopupOnOverlayClick };
