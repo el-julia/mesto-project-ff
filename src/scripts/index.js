@@ -3,6 +3,7 @@ import { buildCard, removeCard, toggleLike } from './card.js';
 import { openPopup, closePopup, closePopupOnOverlayClick } from './modal.js';
 import { initialCards } from './cards.js';
 
+
 const placesList = document.querySelector('.places__list');
 const popupTypeEdit = document.querySelector('.popup_type_edit');
 const popupTypeNewCard = document.querySelector('.popup_type_new-card');
@@ -43,6 +44,9 @@ const jobInput = document.querySelector('.popup__input_type_description');
 
 const profileTitle = document.querySelector('.profile__title');
 const profileDescription = document.querySelector('.profile__description');
+
+
+
 
 function handleProfileFormSubmit(evt) {
     evt.preventDefault();
@@ -99,3 +103,78 @@ initialCards.forEach(cardData => {
     placesList.append(card);
 });
 
+//7
+
+
+//7 функция которая добавляет класс с ошибкой. красное поле
+function showInputError(formElement, inputElement, errorMessage) {
+    const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
+    inputElement.classList.add('popup__input_type_error');
+    errorElement.textContent = errorMessage;
+    errorElement.classList.add('popup__input-error_active');
+};
+
+//7 функция которая удаляет класс с ошибкой. красное поле
+function hideInputError(formElement, inputElement) {
+    const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
+    inputElement.classList.remove('popup__input_type_error');
+    errorElement.classList.remove('popup__input-error_active');
+    errorElement.textContent = '';
+};
+
+//7 функция которая проверяет валидность
+function checkInputValidity(formElement, inputElement) {
+
+    if (inputElement.validity.patternMismatch) {
+        inputElement.setCustomValidity(inputElement.dataset.errorMessage);
+    } else {
+        inputElement.setCustomValidity("");
+    }
+    
+    if (!inputElement.validity.valid) {
+    showInputError(formElement, inputElement, inputElement.validationMessage);
+    } else {
+    hideInputError(formElement, inputElement);
+    }
+};
+
+//7 функция которая вешает слушателя на каждый инпут
+function setEventListeners(formElement) {
+    const inputList = Array.from(formElement.querySelectorAll('.popup__input'));
+    const buttonElement = formElement.querySelector('.popup__button');
+    toggleButtonState(inputList, buttonElement);
+    inputList.forEach((inputElement) => {
+        inputElement.addEventListener('input', function () {
+            checkInputValidity(formElement, inputElement);
+            toggleButtonState(inputList, buttonElement);
+        });
+    });
+};
+//7 функция которая 
+function enableValidation() {
+    const formList = Array.from(document.querySelectorAll('.popup__form'));
+    formList.forEach((formElement) => {
+        setEventListeners(formElement);
+    });
+};
+//7 
+enableValidation();
+
+//7 функция которая 
+function hasInvalidInput(inputList) {
+    return inputList.some((inputElement) => {
+        return !inputElement.validity.valid
+    });
+};
+
+hasInvalidInput(inputList);
+
+function toggleButtonState(inputList, buttonElement) {
+    if (hasInvalidInput(inputList)) {
+        buttonElement.disabled = true;
+        buttonElement.classList.add('.popup__button-inactive');
+    } else {
+        buttonElement.disabled = false;
+        buttonElement.classList.remove('.popup__button-inactive');
+    }
+};
