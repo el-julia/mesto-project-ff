@@ -19,12 +19,11 @@
   cursor: pointer;
 }
 
-.popup__button-inactive {
+.popup__button_disabled {
   color: rgba(0, 0, 0, .2);
   background: white;
   user-select: none;
   pointer-events: none;
-
 }
 
 @media screen and (max-width: 568px) {
