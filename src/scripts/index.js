@@ -2,56 +2,13 @@ import '../pages/index.css';
 import { buildCard, removeCard, toggleLike } from './card.js';
 import { openPopup, closePopup, closePopupOnOverlayClick } from './modal.js';
 import { enableValidation, clearValidation } from './validation.js';
-import { getInitialCards, config, getusersinformation } from './api.js';
+import { getInitialCards, getusersinformation, addNewCard } from './api.js';
 
 const nameInput = document.querySelector('.popup__input_type_name');
 const jobInput = document.querySelector('.popup__input_type_description');
 
 const profileTitle = document.querySelector('.profile__title');
 const profileDescription = document.querySelector('.profile__description');
-
-
-
-
-// профиль
-fetch('https://nomoreparties.co/v1/wff-cohort-34/users/me', {
-    headers: {
-        authorization: '98e2ee8c-3458-4b67-a2fc-bc47b2fb0b6d'
-    }
-})
-
-    .then((res) => {
-        return res.json();
-    })
-
-    .then((data) => {
-        console.log(data);
-    })
-
-    .catch((err) => {
-        console.log(err);
-    });
-
-// карточки 
-fetch('https://nomoreparties.co/v1/wff-cohort-34/cards ', {
-    headers: {
-        authorization: '98e2ee8c-3458-4b67-a2fc-bc47b2fb0b6d'
-    }
-})
-
-    .then((res) => {
-        return res.json();
-    })
-
-    .then((data) => {
-        console.log(data);
-    })
-
-    .catch((err) => {
-        console.log(err);
-    });
-
-
 
 
 const placesList = document.querySelector('.places__list');
@@ -100,11 +57,6 @@ closeButtons.forEach(button => {
 document.addEventListener('click', closePopupOnOverlayClick);
 
 
-
-
-
-
-
 function handleProfileFormSubmit(evt) {
     evt.preventDefault();
     const nameValue = nameInput.value;
@@ -113,7 +65,6 @@ function handleProfileFormSubmit(evt) {
     profileDescription.textContent = jobValue;
     formElementProfile.reset();
     closePopup(evt.target.closest('.popup'));
-
 }
 
 formElementProfile.addEventListener('submit', handleProfileFormSubmit);
@@ -130,19 +81,25 @@ function handleCardFormSubmit(evt) {
     const cardNameValue = inputCardName.value;
     const cardUrlValue = inputCardUrl.value;
 
-    const newCard = buildCard(
-        {
-            name: cardNameValue,
-            link: cardUrlValue,
-        },
-        removeCard,
-        handleCardImageClick,
-        toggleLike,
-    )
+    addNewCard(cardNameValue, cardUrlValue)
+        .then((newNewCard) => {
+            console.log("Добавлена новая карточка", newNewCard)
+            const newCard = buildCard(
+                newNewCard,
+                removeCard,
+                handleCardImageClick,
+                toggleLike,
+            )
 
-    placesList.prepend(newCard);
-    formElementCard.reset();
-    closePopup(evt.target.closest('.popup'));
+            placesList.prepend(newCard);
+            formElementCard.reset();
+            closePopup(evt.target.closest('.popup'));
+
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+
 }
 
 formElementCard.addEventListener('submit', handleCardFormSubmit);

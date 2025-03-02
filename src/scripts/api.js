@@ -25,8 +25,8 @@ const getInitialCards = () => {
 const getusersinformation = () => {
     return fetch(`${config.baseUrl}/users/me`, {
         headers: config.headers
-    })  
-    
+    })
+
         .then(res => {
             if (res.ok) {
                 return res.json();
@@ -36,4 +36,29 @@ const getusersinformation = () => {
         })
 };
 
-export { config, getInitialCards, getusersinformation };
+// карточку на сервер
+const addNewCard = (name, link) => {
+    return fetch(`${config.baseUrl}/cards`, {
+        method: "POST",
+        body: JSON.stringify({
+            name: name,
+            link: link
+        }),
+
+        headers: config.headers
+    })
+
+        .then(res => {
+            if (res.ok) {
+                return res.json();
+            }
+
+            return Promise.reject(`Ошибка: ${res.status}`)
+        })
+
+}
+
+
+
+
+export { config, getInitialCards, getusersinformation, addNewCard };
