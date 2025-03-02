@@ -1,5 +1,4 @@
-import { validationConfig } from "./index.js";
-import { clearValidation } from "./validation.js"
+
 
 export function openPopup(popupElement) {
     popupElement.classList.add('popup_is-opened');
@@ -8,7 +7,6 @@ export function openPopup(popupElement) {
 
 
 export function closePopup(popupElement) {
-    clearValidation(popupElement.querySelector('.popup__form'), validationConfig);
     popupElement.classList.remove('popup_is-opened');
     document.removeEventListener('keydown', closeOnEscape);
 }
