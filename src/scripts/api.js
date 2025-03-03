@@ -36,7 +36,7 @@ const getusersinformation = () => {
         })
 };
 
-// карточку на сервер
+// отправляем карточку на сервер
 const addNewCard = (name, link) => {
     return fetch(`${config.baseUrl}/cards`, {
         method: "POST",
@@ -58,7 +58,21 @@ const addNewCard = (name, link) => {
 
 }
 
+const updateEserData = (name, about) => {
+    return fetch(`${config.baseUrl}/users/me`, {
+        method: "PATCH",
+        
+        body: JSON.stringify({
+            name: name,
+            about: about
+        }),
+
+        headers: config.headers
+
+    })
+}
 
 
 
-export { config, getInitialCards, getusersinformation, addNewCard };
+
+export { config, getInitialCards, getusersinformation, addNewCard, updateEserData };

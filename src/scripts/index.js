@@ -2,7 +2,9 @@ import '../pages/index.css';
 import { buildCard, removeCard, toggleLike } from './card.js';
 import { openPopup, closePopup, closePopupOnOverlayClick } from './modal.js';
 import { enableValidation, clearValidation } from './validation.js';
-import { getInitialCards, getusersinformation, addNewCard } from './api.js';
+import { getInitialCards, getusersinformation, addNewCard, updateEserData } from './api.js';
+
+
 
 const nameInput = document.querySelector('.popup__input_type_name');
 const jobInput = document.querySelector('.popup__input_type_description');
@@ -61,10 +63,18 @@ function handleProfileFormSubmit(evt) {
     evt.preventDefault();
     const nameValue = nameInput.value;
     const jobValue = jobInput.value;
-    profileTitle.textContent = nameValue;
-    profileDescription.textContent = jobValue;
-    formElementProfile.reset();
-    closePopup(evt.target.closest('.popup'));
+    updateEserData(nameValue, jobValue)
+        .then((newProfil) => {
+            console.log("Добавлен новый пользователь", newProfil)
+            profileTitle.textContent = nameValue;
+            profileDescription.textContent = jobValue;
+            formElementProfile.reset();
+            closePopup(evt.target.closest('.popup'));
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+
 }
 
 formElementProfile.addEventListener('submit', handleProfileFormSubmit);
@@ -111,10 +121,6 @@ function handleCardImageClick(cardData) {
     popupCaption.textContent = cardData.name;
     openPopup(popupTypeImage);
 }
-
-
-
-
 
 
 //включаем валидацию
