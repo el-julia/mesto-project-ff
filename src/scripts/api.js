@@ -61,7 +61,7 @@ const addNewCard = (name, link) => {
 const updateEserData = (name, about) => {
     return fetch(`${config.baseUrl}/users/me`, {
         method: "PATCH",
-        
+
         body: JSON.stringify({
             name: name,
             about: about
@@ -72,7 +72,15 @@ const updateEserData = (name, about) => {
     })
 }
 
+const deletCard = (cardId) => {
+    return fetch(`${config.baseUrl}/cards/${cardId}`, {
+        method: "DELETE",
+        headers: config.headers
+    })
+
+}
 
 
 
-export { config, getInitialCards, getusersinformation, addNewCard, updateEserData };
+
+export { config, getInitialCards, getusersinformation, addNewCard, updateEserData, deletCard };

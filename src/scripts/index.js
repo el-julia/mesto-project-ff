@@ -99,6 +99,7 @@ function handleCardFormSubmit(evt) {
                 removeCard,
                 handleCardImageClick,
                 toggleLike,
+                
             )
 
             placesList.prepend(newCard);
@@ -143,6 +144,7 @@ getInitialCards()
 // подключаем данные пользователя
 getusersinformation()
     .then((result) => {
+        // console.log("user", result);
         profileTitle.textContent = result.name;
         profileDescription.textContent = result.about;
     })
