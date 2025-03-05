@@ -34,7 +34,7 @@ const getAvatar = () => {
 
 
 
-const getusersinformation = () => {
+const getUserInformation = () => {
     return fetch(`${config.baseUrl}/users/me`, {
         headers: config.headers
     })
@@ -130,4 +130,4 @@ const updateLikeCard = (cardId, isLiked) => {
 
 
 
-export { config, getInitialCards, getusersinformation, addNewCard, updateUserData, deletCard, updateLikeCard, updateAvatar, getAvatar };
+export { config, getInitialCards, getUserInformation as getusersinformation, addNewCard, updateUserData, deletCard, updateLikeCard, updateAvatar, getAvatar };

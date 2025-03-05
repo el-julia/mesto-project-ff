@@ -2,10 +2,7 @@ import '../pages/index.css';
 import { buildCard, removeCard, toggleLike } from './card.js';
 import { openPopup, closePopup, closePopupOnOverlayClick } from './modal.js';
 import { enableValidation, clearValidation } from './validation.js';
-import { getInitialCards, getusersinformation, addNewCard, updateUserData, updateAvatar, getAvatar } from './api.js';
-
-let userId;
-
+import { getInitialCards, getusersinformation as getUserInformation, addNewCard, updateUserData, updateAvatar, getAvatar } from './api.js';
 
 
 const nameInput = document.querySelector('.popup__input_type_name');
@@ -49,17 +46,14 @@ function handleAvatarFormSubmit(evt) {
     evt.preventDefault();
     const avatarUrl = popupInputTypeAvatarUrl.value.trim();
 
-    // Отправляем запрос на сервер
     updateAvatar(avatarUrl)
         .then((data) => {
-            console.log("avatar", data)
-            // Обновляем аватар на странице, используя данные из ответа сервера
             profileImage.style.backgroundImage = `url("${data.avatar}")`;
             formElementAvatar.reset();
             closePopup(evt.target.closest('.popup'));
         })
         .catch((err) => {
-            console.log(err); // Логируем ошибку, если что-то пошло не так
+            console.log(err);
         });
 }
 
@@ -98,7 +92,6 @@ function handleProfileFormSubmit(evt) {
     const jobValue = jobInput.value;
     updateUserData(nameValue, jobValue)
         .then((newProfil) => {
-            console.log("Добавлен новый пользователь", newProfil)
             profileTitle.textContent = nameValue;
             profileDescription.textContent = jobValue;
             formElementProfile.reset();
@@ -117,7 +110,7 @@ const formElementCard = document.querySelector('form[name="new-place"]');
 const inputCardName = document.querySelector('.popup__input_type_card-name');
 const inputCardUrl = document.querySelector('.popup__input_type_url');
 
-function handleCardFormSubmit(evt) {
+function handleCardFormSubmit(evt, userId) {
 
     evt.preventDefault();
 
@@ -147,8 +140,6 @@ function handleCardFormSubmit(evt) {
 
 }
 
-formElementCard.addEventListener('submit', handleCardFormSubmit);
-
 
 function handleCardImageClick(cardData) {
     popupImage.src = cardData.link;
@@ -157,41 +148,38 @@ function handleCardImageClick(cardData) {
     openPopup(popupTypeImage);
 }
 
-
 //включаем валидацию
 enableValidation(validationConfig);
 
-
-// подключаем карточки с сервера
-getInitialCards()
+getUserInformation()
     .then((result) => {
-        result.forEach(cardData => {
-            const card = buildCard(cardData, removeCard, handleCardImageClick, toggleLike, userId);
-            placesList.append(card);
-        })
-    })
-
-    .catch((err) => {
-        console.log(err); // выводим ошибку в консоль
-    });
-
-// подключаем данные пользователя
-getusersinformation()
-    .then((result) => {
-        // console.log("user", result);
+        profileImage.style.backgroundImage = `url("${result.avatar}")`;
         profileTitle.textContent = result.name;
         profileDescription.textContent = result.about;
-    })
 
+        // чтобы проверить поставил ли юзер лайк нам нужен его id
+        // поэтому инициализируем карточки только после получения данных пользователя
+        initCards(result._id);
+        formElementCard.addEventListener(
+            'submit',
+            (event) => {
+                handleCardFormSubmit(event, result._id)
+            }
+        );
+    })
     .catch((err) => {
         console.log(err);
     });
 
-getAvatar()
-    .then((result) => {
-        console.log(result);
-        profileImage.style.backgroundImage = `url("${result.avatar}")`;
-    })
-    .catch((err) => {
-        console.log(err);
-    });
+function initCards(userId) {
+        getInitialCards()
+            .then((result) => {
+                result.forEach(cardData => {
+                    const card = buildCard(cardData, removeCard, handleCardImageClick, toggleLike, userId);
+                    placesList.append(card);
+                })
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+}

@@ -1,12 +1,11 @@
 import { deletCard, updateLikeCard } from './api.js';
 
 export function toggleLike(event, cardData, userId) {
-
     const isLiked = cardData.likes.some(like => like._id === userId);
 
     updateLikeCard(cardData._id, isLiked)
         .then((updatedCard) => {
-            cardData.likes = updatedCard.likes; // обновляем данные лайков
+            cardData.likes = updatedCard.likes;
             event.target.classList.toggle('card__like-button_is-active', !isLiked);
             event.target.nextElementSibling.textContent = updatedCard.likes.length;
         })
@@ -43,7 +42,7 @@ export function buildCard(cardData, handleCardDeleteButtonClick, handleCardImage
 
 
     const deleteButton = cardElement.querySelector('.card__delete-button');
-    if (cardData.owner._id !== "ad5ad4feacfe8216f8d53be6") {
+    if (cardData.owner._id !== userId) {
         deleteButton.style.display = 'none';
     } else {
         deleteButton.addEventListener('click', () => {
@@ -56,10 +55,8 @@ export function buildCard(cardData, handleCardDeleteButtonClick, handleCardImage
 
 
 export function removeCard(cardElement, cardData) {
-
     deletCard(cardData._id)
         .then((card) => {
-            console.log("удалаяем", card)
             cardElement.remove();
         })
         .catch((err) => {
