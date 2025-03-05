@@ -1,10 +1,21 @@
-import { deletCard } from './api.js';
+import { deletCard, updateLikeCard } from './api.js';
 
-export function toggleLike(event) {
-    event.target.classList.toggle('card__like-button_is-active');
+export function toggleLike(event, cardData, userId) {
+
+    const isLiked = cardData.likes.some(like => like._id === userId);
+
+    updateLikeCard(cardData._id, isLiked)
+        .then((updatedCard) => {
+            cardData.likes = updatedCard.likes; // обновляем данные лайков
+            event.target.classList.toggle('card__like-button_is-active', !isLiked);
+            event.target.nextElementSibling.textContent = updatedCard.likes.length;
+        })
+        .catch((err) => {
+            console.log(err);
+        });
 }
 
-export function buildCard(cardData, handleCardDeleteButtonClick, handleCardImageClick, handleCardLikeButtonClick) {
+export function buildCard(cardData, handleCardDeleteButtonClick, handleCardImageClick, handleCardLikeButtonClick, userId) {
     const cardTemplate = document.querySelector('#card-template').content;
 
     const cardElement = cardTemplate.querySelector('.card').cloneNode(true);
@@ -21,10 +32,15 @@ export function buildCard(cardData, handleCardDeleteButtonClick, handleCardImage
     cardTitleElement.textContent = cardData.name;
 
     const likeButton = cardElement.querySelector('.card__like-button');
-    likeButton.addEventListener('click', handleCardLikeButtonClick);
+    const isLiked = cardData.likes.some(like => like._id === userId);
+    likeButton.classList.toggle('card__like-button_is-active', isLiked);
+    likeButton.addEventListener('click', (event) => {
+        handleCardLikeButtonClick(event, cardData, userId);
+    });
 
     const cardLikeSum = cardElement.querySelector('.card__like-sum');
     cardLikeSum.textContent = cardData.likes.length;
+
 
     const deleteButton = cardElement.querySelector('.card__delete-button');
     if (cardData.owner._id !== "ad5ad4feacfe8216f8d53be6") {

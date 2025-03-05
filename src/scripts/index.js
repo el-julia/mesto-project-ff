@@ -4,6 +4,8 @@ import { openPopup, closePopup, closePopupOnOverlayClick } from './modal.js';
 import { enableValidation, clearValidation } from './validation.js';
 import { getInitialCards, getusersinformation, addNewCard, updateEserData } from './api.js';
 
+let userId;
+
 
 
 const nameInput = document.querySelector('.popup__input_type_name');
@@ -22,6 +24,12 @@ const popupTypeImage = document.querySelector('.popup_type_image');
 const popupImage = document.querySelector('.popup__image');
 const popupCaption = document.querySelector('.popup__caption');
 
+const profileImage = document.querySelector('.profile__image');
+const popupTypeEditAvatar = document.querySelector('.popup_type_edit-avatar');
+const popupInputTypeAvatarUrl = document.querySelector('.popup__input_type_avatar_url');
+const formElementAvatar = document.querySelector('form[name="update-avatar"]');
+
+
 const validationConfig = {
     formSelector: '.popup__form',
     inputSelector: '.popup__input',
@@ -31,6 +39,21 @@ const validationConfig = {
     errorClass: 'popup__input-error_active'
 };
 
+profileImage.addEventListener('click', function () {
+    popupInputTypeAvatarUrl.value = profileImage.style.backgroundImage;
+    clearValidation(popupTypeEditAvatar, validationConfig);
+    openPopup(popupTypeEditAvatar);
+});
+
+function handleAvatarFormSubmit(evt) {
+    evt.preventDefault();
+    const avatarUrl = popupInputTypeAvatarUrl.value;
+    profileImage.style.backgroundImage = `url(${avatarUrl})`;
+    formElementAvatar.reset();
+    closePopup(evt.target.closest('.popup'));
+}
+
+formElementAvatar.addEventListener('submit', handleAvatarFormSubmit);
 
 const profileEditButton = document.querySelector('.profile__edit-button');
 profileEditButton.addEventListener('click', function () {
@@ -99,7 +122,8 @@ function handleCardFormSubmit(evt) {
                 removeCard,
                 handleCardImageClick,
                 toggleLike,
-                
+                userId,
+
             )
 
             placesList.prepend(newCard);
@@ -132,7 +156,7 @@ enableValidation(validationConfig);
 getInitialCards()
     .then((result) => {
         result.forEach(cardData => {
-            const card = buildCard(cardData, removeCard, handleCardImageClick, toggleLike);
+            const card = buildCard(cardData, removeCard, handleCardImageClick, toggleLike, userId);
             placesList.append(card);
         })
     })
@@ -145,6 +169,7 @@ getInitialCards()
 getusersinformation()
     .then((result) => {
         // console.log("user", result);
+        userId = user._id;
         profileTitle.textContent = result.name;
         profileDescription.textContent = result.about;
     })
