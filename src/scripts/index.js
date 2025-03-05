@@ -2,7 +2,7 @@ import '../pages/index.css';
 import { buildCard, removeCard, toggleLike } from './card.js';
 import { openPopup, closePopup, closePopupOnOverlayClick } from './modal.js';
 import { enableValidation, clearValidation } from './validation.js';
-import { getInitialCards, getusersinformation, addNewCard, updateEserData } from './api.js';
+import { getInitialCards, getusersinformation, addNewCard, updateUserData, updateAvatar, getAvatar } from './api.js';
 
 let userId;
 
@@ -40,17 +40,27 @@ const validationConfig = {
 };
 
 profileImage.addEventListener('click', function () {
-    popupInputTypeAvatarUrl.value = profileImage.style.backgroundImage;
+    popupInputTypeAvatarUrl.value = profileImage.style.backgroundImage.replace(/^url\(["']?|["']?\)$/g, ''); // Очищаем значение
     clearValidation(popupTypeEditAvatar, validationConfig);
     openPopup(popupTypeEditAvatar);
 });
 
 function handleAvatarFormSubmit(evt) {
     evt.preventDefault();
-    const avatarUrl = popupInputTypeAvatarUrl.value;
-    profileImage.style.backgroundImage = `url(${avatarUrl})`;
-    formElementAvatar.reset();
-    closePopup(evt.target.closest('.popup'));
+    const avatarUrl = popupInputTypeAvatarUrl.value.trim();
+
+    // Отправляем запрос на сервер
+    updateAvatar(avatarUrl)
+        .then((data) => {
+            console.log("avatar", data)
+            // Обновляем аватар на странице, используя данные из ответа сервера
+            profileImage.style.backgroundImage = `url("${data.avatar}")`;
+            formElementAvatar.reset();
+            closePopup(evt.target.closest('.popup'));
+        })
+        .catch((err) => {
+            console.log(err); // Логируем ошибку, если что-то пошло не так
+        });
 }
 
 formElementAvatar.addEventListener('submit', handleAvatarFormSubmit);
@@ -86,7 +96,7 @@ function handleProfileFormSubmit(evt) {
     evt.preventDefault();
     const nameValue = nameInput.value;
     const jobValue = jobInput.value;
-    updateEserData(nameValue, jobValue)
+    updateUserData(nameValue, jobValue)
         .then((newProfil) => {
             console.log("Добавлен новый пользователь", newProfil)
             profileTitle.textContent = nameValue;
@@ -169,7 +179,6 @@ getInitialCards()
 getusersinformation()
     .then((result) => {
         // console.log("user", result);
-        userId = user._id;
         profileTitle.textContent = result.name;
         profileDescription.textContent = result.about;
     })
@@ -178,3 +187,11 @@ getusersinformation()
         console.log(err);
     });
 
+getAvatar()
+    .then((result) => {
+        console.log(result);
+        profileImage.style.backgroundImage = `url("${result.avatar}")`;
+    })
+    .catch((err) => {
+        console.log(err);
+    });

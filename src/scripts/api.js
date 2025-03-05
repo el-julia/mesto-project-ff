@@ -20,6 +20,18 @@ const getInitialCards = () => {
         })
 };
 
+const getAvatar = () => {
+    return fetch(`${config.baseUrl}/users/me`, {
+        headers: config.headers
+    })
+    .then(res => {
+        if (res.ok) {
+            return res.json();
+        }
+        return Promise.reject(`Ошибка: ${res.status}`)
+    })
+};
+
 
 
 const getusersinformation = () => {
@@ -58,7 +70,7 @@ const addNewCard = (name, link) => {
 
 }
 
-const updateEserData = (name, about) => {
+const updateUserData = (name, about) => {
     return fetch(`${config.baseUrl}/users/me`, {
         method: "PATCH",
 
@@ -70,6 +82,25 @@ const updateEserData = (name, about) => {
         headers: config.headers
 
     })
+}
+
+const updateAvatar = (avatar) => {
+    return fetch(`${config.baseUrl}/users/me/avatar`, {
+        method: "PATCH",
+
+        body: JSON.stringify({
+            avatar: avatar
+        }),
+
+        headers: config.headers
+    })
+        .then(res => {
+            if (res.ok) {
+                return res.json();
+            }
+
+            return Promise.reject(`Ошибка: ${res.status}`)
+        })
 }
 
 const deletCard = (cardId) => {
@@ -99,4 +130,4 @@ const updateLikeCard = (cardId, isLiked) => {
 
 
 
-export { config, getInitialCards, getusersinformation, addNewCard, updateEserData, deletCard, updateLikeCard };
+export { config, getInitialCards, getusersinformation, addNewCard, updateUserData, deletCard, updateLikeCard, updateAvatar, getAvatar };
