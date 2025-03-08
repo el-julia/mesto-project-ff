@@ -1,5 +1,5 @@
 import { deletCard, updateLikeCard } from './api.js';
-
+import { openPopup, closePopup } from './modal.js';
 export function toggleLike(event, cardData, userId) {
     const isLiked = cardData.likes.some(like => like._id === userId);
 
@@ -14,7 +14,7 @@ export function toggleLike(event, cardData, userId) {
         });
 }
 
-export function buildCard(cardData, handleCardDeleteButtonClick, handleCardImageClick, handleCardLikeButtonClick, userId) {
+export function buildCard(cardData, handleDeleteButtonClick, handleCardImageClick, handleCardLikeButtonClick, userId) {
     const cardTemplate = document.querySelector('#card-template').content;
 
     const cardElement = cardTemplate.querySelector('.card').cloneNode(true);
@@ -40,18 +40,33 @@ export function buildCard(cardData, handleCardDeleteButtonClick, handleCardImage
     const cardLikeSum = cardElement.querySelector('.card__like-sum');
     cardLikeSum.textContent = cardData.likes.length;
 
+    const cardDeleteButton = cardElement.querySelector('.card__delete-button');
+    const popupTypeAgreementTemplate = document
+        .querySelector('#popup_delete-agreement-template')
+        .content
+        .querySelector('.popup');
 
-    const deleteButton = cardElement.querySelector('.card__delete-button');
     if (cardData.owner._id !== userId) {
-        deleteButton.style.display = 'none';
+        cardDeleteButton.style.display = 'none';
     } else {
-        deleteButton.addEventListener('click', () => {
-            handleCardDeleteButtonClick(cardElement, cardData);
+        const popupTypeAgreement = popupTypeAgreementTemplate.cloneNode(true);
+        const popupButtonAgreement = popupTypeAgreement.querySelector('.popup__button-agreement');
+        document.body.append(popupTypeAgreement);
+
+        cardDeleteButton.addEventListener('click', () => {
+            popupButtonAgreement.addEventListener('click', (evt) => {
+                handleDeleteButtonClick(cardElement, cardData);
+                closePopup(popupTypeAgreement);
+                popupTypeAgreement.remove();
+            });
+            openPopup(popupTypeAgreement);
         });
     }
 
     return cardElement;
 }
+
+
 
 
 export function removeCard(cardElement, cardData) {
@@ -63,3 +78,4 @@ export function removeCard(cardElement, cardData) {
             console.log(err);
         });
 }
+

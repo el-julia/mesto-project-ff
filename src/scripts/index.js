@@ -27,6 +27,7 @@ const popupInputTypeAvatarUrl = document.querySelector('.popup__input_type_avata
 const formElementAvatar = document.querySelector('form[name="update-avatar"]');
 
 
+
 const validationConfig = {
     formSelector: '.popup__form',
     inputSelector: '.popup__input',
@@ -72,15 +73,6 @@ const profileAddButton = document.querySelector('.profile__add-button');
 profileAddButton.addEventListener('click', function () {
     clearValidation(popupTypeNewCard, validationConfig);
     openPopup(popupTypeNewCard);
-});
-
-
-const closeButtons = document.querySelectorAll('.popup__close');
-closeButtons.forEach(button => {
-    button.addEventListener('click', function () {
-        const popup = button.closest('.popup');
-        closePopup(popup);
-    });
 });
 
 document.addEventListener('click', closePopupOnOverlayClick);
