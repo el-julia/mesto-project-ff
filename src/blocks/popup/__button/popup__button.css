@@ -11,7 +11,6 @@
   border-radius: 2px;
   border: none;
   transition: visibility 0s, background 0.3s;
-  margin-top: 48px;
 }
 
 .popup__button:hover {
@@ -21,9 +20,10 @@
 
 .popup__button_disabled {
   color: rgba(0, 0, 0, .2);
-  background: white;
+  background: transparent;
   user-select: none;
   pointer-events: none;
+  border: 1px solid;
 }
 
 @media screen and (max-width: 568px) {
