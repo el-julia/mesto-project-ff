@@ -6,7 +6,6 @@ const config = {
     }
 }
 
-//получаем карточки с сервера
 const getInitialCards = () => {
     return fetch(`${config.baseUrl}/cards`, {
         headers: config.headers
@@ -111,6 +110,8 @@ const updateLikeCard = (cardId, isLiked) => {
         })
 
 }
+
+
 
 
 

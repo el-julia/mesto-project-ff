@@ -45,6 +45,7 @@ profileImage.addEventListener('click', function () {
 
 function handleAvatarFormSubmit(evt) {
     evt.preventDefault();
+    renderLoading(true);
     const avatarUrl = popupInputTypeAvatarUrl.value.trim();
 
     updateAvatar(avatarUrl)
@@ -55,6 +56,9 @@ function handleAvatarFormSubmit(evt) {
         })
         .catch((err) => {
             console.log(err);
+        })
+        .finally(() => {
+            renderLoading(false);
         });
 }
 
@@ -80,6 +84,7 @@ document.addEventListener('click', closePopupOnOverlayClick);
 
 function handleProfileFormSubmit(evt) {
     evt.preventDefault();
+    renderLoading(true);
     const nameValue = nameInput.value;
     const jobValue = jobInput.value;
     updateUserData(nameValue, jobValue)
@@ -91,6 +96,9 @@ function handleProfileFormSubmit(evt) {
         })
         .catch((err) => {
             console.log(err);
+        })
+        .finally(() => {
+            renderLoading(false);
         });
 
 }
@@ -105,7 +113,7 @@ const inputCardUrl = document.querySelector('.popup__input_type_url');
 function handleCardFormSubmit(evt, userId) {
 
     evt.preventDefault();
-
+    renderLoading(true);
     const cardNameValue = inputCardName.value;
     const cardUrlValue = inputCardUrl.value;
 
@@ -126,6 +134,9 @@ function handleCardFormSubmit(evt, userId) {
         })
         .catch((err) => {
             console.log(err);
+        })
+        .finally(() => {
+            renderLoading(false);
         });
 
 }
@@ -161,14 +172,25 @@ getUserInformation()
     });
 
 function initCards(userId) {
-        getInitialCards()
-            .then((result) => {
-                result.forEach(cardData => {
-                    const card = buildCard(cardData, removeCard, handleCardImageClick, toggleLike, userId);
-                    placesList.append(card);
-                })
+    getInitialCards()
+        .then((result) => {
+            result.forEach(cardData => {
+                const card = buildCard(cardData, removeCard, handleCardImageClick, toggleLike, userId);
+                placesList.append(card);
             })
-            .catch((err) => {
-                console.log(err);
-            });
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+}
+const popupButton = document.querySelectorAll('.popup__button');
+
+const renderLoading = (isLoading) => {
+    popupButton.forEach(button => {
+        if (isLoading) {
+            button.textContent = 'Сохранение...';
+        } else {
+            button.textContent = 'Сохранить';
+        }
+    });
 }
