@@ -2,7 +2,7 @@ import '../pages/index.css';
 import { buildCard, removeCard, toggleLike } from './card.js';
 import { openPopup, closePopup, closePopupOnOverlayClick } from './modal.js';
 import { enableValidation, clearValidation } from './validation.js';
-import { getInitialCards, getusersinformation as getUserInformation, addNewCard, updateUserData, updateAvatar, getAvatar } from './api.js';
+import { getInitialCards, getUserInformation, addNewCard, updateUserData, updateAvatar } from './api.js';
 
 
 const nameInput = document.querySelector('.popup__input_type_name');
@@ -38,7 +38,7 @@ const validationConfig = {
 };
 
 profileImage.addEventListener('click', function () {
-    popupInputTypeAvatarUrl.value = profileImage.style.backgroundImage.replace(/^url\(["']?|["']?\)$/g, ''); // Очищаем значение
+    popupInputTypeAvatarUrl.value = profileImage.style.backgroundImage.replace(/^url\(["']?|["']?\)$/g, '');
     clearValidation(popupTypeEditAvatar, validationConfig);
     openPopup(popupTypeEditAvatar);
 });
@@ -111,14 +111,12 @@ function handleCardFormSubmit(evt, userId) {
 
     addNewCard(cardNameValue, cardUrlValue)
         .then((newNewCard) => {
-            console.log("Добавлена новая карточка", newNewCard)
             const newCard = buildCard(
                 newNewCard,
                 removeCard,
                 handleCardImageClick,
                 toggleLike,
                 userId,
-
             )
 
             placesList.prepend(newCard);
@@ -140,7 +138,6 @@ function handleCardImageClick(cardData) {
     openPopup(popupTypeImage);
 }
 
-//включаем валидацию
 enableValidation(validationConfig);
 
 getUserInformation()

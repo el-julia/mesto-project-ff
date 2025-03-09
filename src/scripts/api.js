@@ -20,19 +20,6 @@ const getInitialCards = () => {
         })
 };
 
-const getAvatar = () => {
-    return fetch(`${config.baseUrl}/users/me`, {
-        headers: config.headers
-    })
-    .then(res => {
-        if (res.ok) {
-            return res.json();
-        }
-        return Promise.reject(`Ошибка: ${res.status}`)
-    })
-};
-
-
 
 const getUserInformation = () => {
     return fetch(`${config.baseUrl}/users/me`, {
@@ -48,7 +35,6 @@ const getUserInformation = () => {
         })
 };
 
-// отправляем карточку на сервер
 const addNewCard = (name, link) => {
     return fetch(`${config.baseUrl}/cards`, {
         method: "POST",
@@ -103,7 +89,7 @@ const updateAvatar = (avatar) => {
         })
 }
 
-const deletCard = (cardId) => {
+const deleteCard = (cardId) => {
     return fetch(`${config.baseUrl}/cards/${cardId}`, {
         method: "DELETE",
         headers: config.headers
@@ -111,7 +97,6 @@ const deletCard = (cardId) => {
 
 }
 
-// лайкнуть карточку
 const updateLikeCard = (cardId, isLiked) => {
     return fetch(`${config.baseUrl}/cards/likes/${cardId}`, {
         method: isLiked ? "DELETE" : "PUT",
@@ -130,4 +115,4 @@ const updateLikeCard = (cardId, isLiked) => {
 
 
 
-export { config, getInitialCards, getUserInformation as getusersinformation, addNewCard, updateUserData, deletCard, updateLikeCard, updateAvatar, getAvatar };
+export { config, getInitialCards, getUserInformation, addNewCard, updateUserData, deleteCard, updateLikeCard, updateAvatar};

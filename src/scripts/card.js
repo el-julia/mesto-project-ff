@@ -1,5 +1,7 @@
-import { deletCard, updateLikeCard } from './api.js';
+import { deleteCard, updateLikeCard } from './api.js';
 import { openPopup, closePopup } from './modal.js';
+
+
 export function toggleLike(event, cardData, userId) {
     const isLiked = cardData.likes.some(like => like._id === userId);
 
@@ -67,11 +69,9 @@ export function buildCard(cardData, handleDeleteButtonClick, handleCardImageClic
 }
 
 
-
-
 export function removeCard(cardElement, cardData) {
-    deletCard(cardData._id)
-        .then((card) => {
+    deleteCard(cardData._id)
+        .then(() => {
             cardElement.remove();
         })
         .catch((err) => {
