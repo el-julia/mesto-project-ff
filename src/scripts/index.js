@@ -79,7 +79,10 @@ profileAddButton.addEventListener('click', function () {
     openPopup(popupTypeNewCard);
 });
 
-document.addEventListener('click', closePopupOnOverlayClick);
+const popups = document.querySelectorAll('.popup');
+popups.forEach((popup) => {
+    popup.addEventListener('click', closePopupOnOverlayClick);
+});
 
 
 function handleProfileFormSubmit(evt) {
