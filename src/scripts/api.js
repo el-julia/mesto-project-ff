@@ -11,12 +11,8 @@ const getInitialCards = () => {
         headers: config.headers
     })
         .then(res => {
-            if (res.ok) {
-                return res.json();
-            }
-
-            return Promise.reject(`Ошибка: ${res.status}`)
-        })
+            processResponse(res);
+        });
 };
 
 
@@ -26,12 +22,8 @@ const getUserInformation = () => {
     })
 
         .then(res => {
-            if (res.ok) {
-                return res.json();
-            }
-
-            return Promise.reject(`Ошибка: ${res.status}`)
-        })
+            processResponse(res);
+        });
 };
 
 const addNewCard = (name, link) => {
@@ -46,12 +38,8 @@ const addNewCard = (name, link) => {
     })
 
         .then(res => {
-            if (res.ok) {
-                return res.json();
-            }
-
-            return Promise.reject(`Ошибка: ${res.status}`)
-        })
+            processResponse(res);
+        });
 
 }
 
@@ -67,6 +55,9 @@ const updateUserData = (name, about) => {
         headers: config.headers
 
     })
+        .then(res => {
+            processResponse(res);
+        })
 }
 
 const updateAvatar = (avatar) => {
@@ -80,12 +71,8 @@ const updateAvatar = (avatar) => {
         headers: config.headers
     })
         .then(res => {
-            if (res.ok) {
-                return res.json();
-            }
-
-            return Promise.reject(`Ошибка: ${res.status}`)
-        })
+            processResponse(res);
+        });
 }
 
 const deleteCard = (cardId) => {
@@ -93,6 +80,10 @@ const deleteCard = (cardId) => {
         method: "DELETE",
         headers: config.headers
     })
+
+        .then(res => {
+            processResponse(res);
+        });
 
 }
 
@@ -102,13 +93,17 @@ const updateLikeCard = (cardId, isLiked) => {
         headers: config.headers
     })
         .then(res => {
-            if (res.ok) {
-                return res.json();
-            }
+            processResponse(res);
+        });
 
-            return Promise.reject(`Ошибка: ${res.status}`)
-        })
+}
 
+function processResponse(res) {
+    if (res.ok) {
+        return res.json();
+    }
+
+    return Promise.reject(`Ошибка: ${res.status}`);
 }
 
 
@@ -116,4 +111,4 @@ const updateLikeCard = (cardId, isLiked) => {
 
 
 
-export { config, getInitialCards, getUserInformation, addNewCard, updateUserData, deleteCard, updateLikeCard, updateAvatar};
+export { config, getInitialCards, getUserInformation, addNewCard, updateUserData, deleteCard, updateLikeCard, updateAvatar };
