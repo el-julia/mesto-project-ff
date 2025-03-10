@@ -1,5 +1,4 @@
 import { deleteCard, updateLikeCard } from './api.js';
-import { openPopup } from './modal.js';
 
 
 export function toggleLike(event, cardData, userId) {
@@ -16,7 +15,7 @@ export function toggleLike(event, cardData, userId) {
         });
 }
 
-export function buildCard(cardData, handleDeleteButtonClick, handleCardImageClick, handleCardLikeButtonClick, userId, deleteButton) {
+export function buildCard(cardData, handleCardImageClick, handleCardLikeButtonClick, userId, deleteButton) {
     const cardTemplate = document.querySelector('#card-template').content;
 
     const cardElement = cardTemplate.querySelector('.card').cloneNode(true);
@@ -45,7 +44,7 @@ export function buildCard(cardData, handleDeleteButtonClick, handleCardImageClic
 
     if (cardData.owner._id !== userId) {
         deleteButton.style.display = 'none';
-    }
+    } 
 
     return cardElement;
 }

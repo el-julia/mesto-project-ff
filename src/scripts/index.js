@@ -26,8 +26,9 @@ const popupTypeEditAvatar = document.querySelector('.popup_type_edit-avatar');
 const popupInputTypeAvatarUrl = document.querySelector('.popup__input_type_avatar_url');
 const formElementAvatar = document.querySelector('form[name="update-avatar"]');
 
-const cardDeleteButton = cardElement.querySelector('.card__delete-button');
+const cardDeleteButton = document.querySelector('.card__delete-button');
 const popupDeleteAgreement = document.querySelector('.popup_delete-agreement');
+const formElementAgreement = document.querySelector('form[name="agreement"]');
 
 
 
@@ -127,11 +128,15 @@ function handleCardFormSubmit(evt, userId) {
         .then((newNewCard) => {
             const newCard = buildCard(
                 newNewCard,
-                removeCard,
                 handleCardImageClick,
                 toggleLike,
                 userId,
+                cardDeleteButton,
             )
+            cardDeleteButton.addEventListener("click", () => {
+                openPopup(popupDeleteAgreement);
+                formElementAgreement.querySelector('input[name="card-id"]').value = newNewCard._id;
+            });
 
             placesList.prepend(newCard);
             formElementCard.reset();
@@ -203,14 +208,14 @@ const renderLoading = (isLoading) => {
 }
 
 //попап подтверждения удаления карточки
-const formElementAgreement = document.querySelector('form[name="agreement"]');
+
 
 
 formElementAgreement.addEventListener('submit', (evt) => {
     evt.preventDefault();
     const cardId = formElementAgreement.querySelector('input[name="card-id"]').value;
     
-    console.log(formElementAgreement.querySelector('input[name="card-id"]'));
+    console.log(cardId);
     removeCard; // как она понимает какую карту удалить? может нужно просто ();
     closePopup(evt.target.closest('.popup'));
 });
