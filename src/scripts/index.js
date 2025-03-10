@@ -26,6 +26,9 @@ const popupTypeEditAvatar = document.querySelector('.popup_type_edit-avatar');
 const popupInputTypeAvatarUrl = document.querySelector('.popup__input_type_avatar_url');
 const formElementAvatar = document.querySelector('form[name="update-avatar"]');
 
+const cardDeleteButton = cardElement.querySelector('.card__delete-button');
+const popupDeleteAgreement = document.querySelector('.popup_delete-agreement');
+
 
 
 const validationConfig = {
@@ -188,6 +191,7 @@ function initCards(userId) {
 }
 const popupButton = document.querySelectorAll('.popup__button');
 
+// как повлияет на кнопку Да?
 const renderLoading = (isLoading) => {
     popupButton.forEach(button => {
         if (isLoading) {
@@ -197,3 +201,17 @@ const renderLoading = (isLoading) => {
         }
     });
 }
+
+//попап подтверждения удаления карточки
+const formElementAgreement = document.querySelector('form[name="agreement"]');
+
+
+formElementAgreement.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+    const cardId = formElementAgreement.querySelector('input[name="card-id"]').value;
+    
+    console.log(formElementAgreement.querySelector('input[name="card-id"]'));
+    removeCard; // как она понимает какую карту удалить? может нужно просто ();
+    closePopup(evt.target.closest('.popup'));
+});
+

@@ -10,10 +10,9 @@ const getInitialCards = () => {
     return fetch(`${config.baseUrl}/cards`, {
         headers: config.headers
     })
-        .then(res => {
-            processResponse(res);
-        });
-};
+        .then(res =>
+            processResponse(res));
+}
 
 
 const getUserInformation = () => {
@@ -21,10 +20,9 @@ const getUserInformation = () => {
         headers: config.headers
     })
 
-        .then(res => {
-            processResponse(res);
-        });
-};
+        .then(res =>
+            processResponse(res));
+}
 
 const addNewCard = (name, link) => {
     return fetch(`${config.baseUrl}/cards`, {
@@ -37,9 +35,8 @@ const addNewCard = (name, link) => {
         headers: config.headers
     })
 
-        .then(res => {
-            processResponse(res);
-        });
+        .then(res =>
+            processResponse(res));
 
 }
 
@@ -55,9 +52,8 @@ const updateUserData = (name, about) => {
         headers: config.headers
 
     })
-        .then(res => {
-            processResponse(res);
-        })
+        .then(res =>
+            processResponse(res))
 }
 
 const updateAvatar = (avatar) => {
@@ -70,9 +66,7 @@ const updateAvatar = (avatar) => {
 
         headers: config.headers
     })
-        .then(res => {
-            processResponse(res);
-        });
+    .then(res => processResponse(res));
 }
 
 const deleteCard = (cardId) => {
@@ -80,10 +74,8 @@ const deleteCard = (cardId) => {
         method: "DELETE",
         headers: config.headers
     })
-
-        .then(res => {
-            processResponse(res);
-        });
+        .then(res => 
+            processResponse(res));
 
 }
 
@@ -92,9 +84,8 @@ const updateLikeCard = (cardId, isLiked) => {
         method: isLiked ? "DELETE" : "PUT",
         headers: config.headers
     })
-        .then(res => {
-            processResponse(res);
-        });
+        .then(res =>
+            processResponse(res))
 
 }
 

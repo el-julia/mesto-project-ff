@@ -1,5 +1,5 @@
 import { deleteCard, updateLikeCard } from './api.js';
-import { openPopup, closePopup } from './modal.js';
+import { openPopup } from './modal.js';
 
 
 export function toggleLike(event, cardData, userId) {
@@ -16,7 +16,7 @@ export function toggleLike(event, cardData, userId) {
         });
 }
 
-export function buildCard(cardData, handleDeleteButtonClick, handleCardImageClick, handleCardLikeButtonClick, userId) {
+export function buildCard(cardData, handleDeleteButtonClick, handleCardImageClick, handleCardLikeButtonClick, userId, deleteButton) {
     const cardTemplate = document.querySelector('#card-template').content;
 
     const cardElement = cardTemplate.querySelector('.card').cloneNode(true);
@@ -42,35 +42,17 @@ export function buildCard(cardData, handleDeleteButtonClick, handleCardImageClic
     const cardLikeSum = cardElement.querySelector('.card__like-sum');
     cardLikeSum.textContent = cardData.likes.length;
 
-    const cardDeleteButton = cardElement.querySelector('.card__delete-button');
-    const popupTypeAgreementTemplate = document
-        .querySelector('#popup_delete-agreement-template')
-        .content
-        .querySelector('.popup');
 
     if (cardData.owner._id !== userId) {
-        cardDeleteButton.style.display = 'none';
-    } else {
-        const popupTypeAgreement = popupTypeAgreementTemplate.cloneNode(true);
-        const popupButtonAgreement = popupTypeAgreement.querySelector('.popup__button-agreement');
-        document.body.append(popupTypeAgreement);
-
-        cardDeleteButton.addEventListener('click', () => {
-            popupButtonAgreement.addEventListener('click', (evt) => {
-                handleDeleteButtonClick(cardElement, cardData);
-                closePopup(popupTypeAgreement);
-                popupTypeAgreement.remove();
-            });
-            openPopup(popupTypeAgreement);
-        });
+        deleteButton.style.display = 'none';
     }
 
     return cardElement;
 }
 
 
-export function removeCard(cardElement, cardData) {
-    deleteCard(cardData._id)
+export function removeCard(cardElement, cardId) {
+    deleteCard(cardId)
         .then(() => {
             cardElement.remove();
         })

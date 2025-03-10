@@ -104,15 +104,18 @@
       </li>
     </template>
 
-    <template id="popup_delete-agreement-template">
-      <div class="popup popup_type_delete-agreement">
-        <div class="popup__content">
-          <button type="button" class="popup__close"></button>
-          <h3 class="popup__title">Вы уверены?</h3>
-          <button class="button popup__button popup__button-agreement">Да</button>
-        </div>
+
+    <div class="popup popup_delete-agreement">
+      <div class="popup__content">
+        <button type="button" class="popup__close"></button>
+        <h3 class="popup__title">Вы уверены?</h3>
+        <form class="popup__form" name="agreement" novalidate>
+          <input type="hidden" name="card-id"/>
+          <button type="submit" class="button popup__button popup__button-agreement">Да</button>
+        </form>
       </div>
-    </template>
+    </div>
+
 </body>
 
 </html>
