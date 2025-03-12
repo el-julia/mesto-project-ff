@@ -8,20 +8,18 @@ const config = {
 
 const getInitialCards = () => {
     return fetch(`${config.baseUrl}/cards`, {
-        headers: config.headers
+        headers: config.headers,
     })
-        .then(res =>
-            processResponse(res));
+        .then(res => processResponse(res));
 }
 
 
 const getUserInformation = () => {
     return fetch(`${config.baseUrl}/users/me`, {
-        headers: config.headers
+        headers: config.headers,
     })
 
-        .then(res =>
-            processResponse(res));
+        .then(res => processResponse(res));
 }
 
 const addNewCard = (name, link) => {
@@ -32,11 +30,10 @@ const addNewCard = (name, link) => {
             link: link
         }),
 
-        headers: config.headers
+        headers: config.headers,
     })
 
-        .then(res =>
-            processResponse(res));
+        .then(res => processResponse(res));
 
 }
 
@@ -49,11 +46,10 @@ const updateUserData = (name, about) => {
             about: about
         }),
 
-        headers: config.headers
+        headers: config.headers,
 
     })
-        .then(res =>
-            processResponse(res))
+        .then(res => processResponse(res))
 }
 
 const updateAvatar = (avatar) => {
@@ -64,7 +60,7 @@ const updateAvatar = (avatar) => {
             avatar: avatar
         }),
 
-        headers: config.headers
+        headers: config.headers,
     })
         .then(res => processResponse(res));
 }
@@ -72,20 +68,18 @@ const updateAvatar = (avatar) => {
 const deleteCard = (cardId) => {
     return fetch(`${config.baseUrl}/cards/${cardId}`, {
         method: "DELETE",
-        headers: config.headers
+        headers: config.headers,
     })
-        .then(res =>
-            processResponse(res));
+        .then(res => processResponse(res));
 
 }
 
 const updateLikeCard = (cardId, isLiked) => {
     return fetch(`${config.baseUrl}/cards/likes/${cardId}`, {
         method: isLiked ? "DELETE" : "PUT",
-        headers: config.headers
+        headers: config.headers,
     })
-        .then(res =>
-            processResponse(res))
+        .then(res => processResponse(res))
 
 }
 

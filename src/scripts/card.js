@@ -1,7 +1,7 @@
 import { deleteCard, updateLikeCard } from './api.js';
 
 
-export function toggleLike(cardData, userId, likeButtonElement, likeCounterElement) {
+export function toggleLike(likeButtonElement, cardData, userId, likeCounterElement) {
     const isLiked = cardData.likes.some(like => like._id === userId);
 
     updateLikeCard(cardData._id, isLiked)
@@ -36,7 +36,7 @@ export function buildCard(cardData, handleDeleteButtonClick, handleCardImageClic
     const isLiked = cardData.likes.some(like => like._id === userId);
     likeButton.classList.toggle('card__like-button_is-active', isLiked);
     likeButton.addEventListener('click', (event) => {
-        handleCardLikeButtonClick(event, cardData, userId);
+        handleCardLikeButtonClick(likeButton, cardData, userId, cardLikeSum);
     });
 
     const cardLikeSum = cardElement.querySelector('.card__like-sum');

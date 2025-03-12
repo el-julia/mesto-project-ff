@@ -101,7 +101,7 @@ function handleProfileFormSubmit(evt) {
             profileTitle.textContent = nameValue;
             profileDescription.textContent = jobValue;
             formElementProfile.reset();
-            closePopup(evt.target.closest('.popup'));
+            closePopup(popupTypeEdit);
         })
         .catch((err) => {
             console.log(err);
@@ -203,24 +203,23 @@ const renderLoading = (isLoading) => {
     });
 }
 
-const popupTypeAgreement = document.querySelector('.popup_delete-agreement')
+formElementAgreement.addEventListener('submit', handleRemoveCardSubmit);
 
-formElementAgreement.addEventListener('submit', removeCardNew);
-
-function removeCardNew(evt) {
+function handleRemoveCardSubmit(evt) {
     evt.preventDefault();
 
     if (!cardForDeleteId || !cardForDeleteElement) {
+        console.log("Ошибка: не задана карта для удаления")
         return
     }
 
     removeCard(cardForDeleteElement, cardForDeleteId, () => {
-        closePopup(popupTypeAgreement)
+        closePopup(popupDeleteAgreement)
     });
 }
 
 function handleDeleteButtonClick(cardId, cardElement) {
     cardForDeleteElement = cardElement;
     cardForDeleteId = cardId;
-    openPopup(popupTypeAgreement);
+    openPopup(popupDeleteAgreement);
 }
