@@ -1,8 +1,8 @@
 import '../pages/index.css';
-import { buildCard, removeCard, toggleLike } from './card.js';
+import { buildCard, toggleLike } from './card.js';
 import { openPopup, closePopup, closePopupOnOverlayClick } from './modal.js';
 import { enableValidation, clearValidation } from './validation.js';
-import { getInitialCards, getUserInformation, addNewCard, updateUserData, updateAvatar } from './api.js';
+import { getInitialCards, getUserInformation, addNewCard, updateUserData, updateAvatar, deleteCard } from './api.js';
 
 
 const nameInput = document.querySelector('.popup__input_type_name');
@@ -26,9 +26,11 @@ const popupTypeEditAvatar = document.querySelector('.popup_type_edit-avatar');
 const popupInputTypeAvatarUrl = document.querySelector('.popup__input_type_avatar_url');
 const formElementAvatar = document.querySelector('form[name="update-avatar"]');
 
-const cardDeleteButton = document.querySelector('.card__delete-button');
 const popupDeleteAgreement = document.querySelector('.popup_delete-agreement');
 const formElementAgreement = document.querySelector('form[name="agreement"]');
+
+let cardForDeleteElement;
+let cardForDeleteId;
 
 
 
@@ -117,41 +119,36 @@ const formElementCard = document.querySelector('form[name="new-place"]');
 const inputCardName = document.querySelector('.popup__input_type_card-name');
 const inputCardUrl = document.querySelector('.popup__input_type_url');
 
-function handleCardFormSubmit(evt, userId) {
-
-    evt.preventDefault();
-    renderLoading(true);
-    const cardNameValue = inputCardName.value;
-    const cardUrlValue = inputCardUrl.value;
-
-    addNewCard(cardNameValue, cardUrlValue)
-        .then((newNewCard) => {
-            const newCard = buildCard(
-                newNewCard,
-                handleCardImageClick,
-                toggleLike,
-                userId,
-                cardDeleteButton,
-            )
-            cardDeleteButton.addEventListener("click", () => {
-                openPopup(popupDeleteAgreement);
-                formElementAgreement.querySelector('input[name="card-id"]').value = newNewCard._id;
-            });
-
-            placesList.prepend(newCard);
-            formElementCard.reset();
-            closePopup(evt.target.closest('.popup'));
-
-        })
-        .catch((err) => {
-            console.log(err);
-        })
-        .finally(() => {
-            renderLoading(false);
-        });
-
-}
-
+function handleCardFormSubmit(evt, userId) { 
+ 
+    evt.preventDefault(); 
+    renderLoading(true); 
+    const cardNameValue = inputCardName.value; 
+    const cardUrlValue = inputCardUrl.value; 
+ 
+    addNewCard(cardNameValue, cardUrlValue) 
+        .then((newNewCard) => { 
+            const newCard = buildCard( 
+                newNewCard, 
+                handleDeleteButtonClick, 
+                handleCardImageClick, 
+                toggleLike, 
+                userId, 
+            ) 
+ 
+            placesList.prepend(newCard); 
+            formElementCard.reset(); 
+            closePopup(evt.target.closest('.popup')); 
+ 
+        }) 
+        .catch((err) => { 
+            console.log(err); 
+        }) 
+        .finally(() => { 
+            renderLoading(false); 
+        }); 
+ 
+} 
 
 function handleCardImageClick(cardData) {
     popupImage.src = cardData.link;
@@ -186,7 +183,7 @@ function initCards(userId) {
     getInitialCards()
         .then((result) => {
             result.forEach(cardData => {
-                const card = buildCard(cardData, removeCard, handleCardImageClick, toggleLike, userId);
+                const card = buildCard(cardData, handleDeleteButtonClick, handleCardImageClick, toggleLike, userId);
                 placesList.append(card);
             })
         })
@@ -194,11 +191,11 @@ function initCards(userId) {
             console.log(err);
         });
 }
-const popupButton = document.querySelectorAll('.popup__button');
+const popupButtonSave = document.querySelectorAll('.popup__button-save');
 
 // как повлияет на кнопку Да?
 const renderLoading = (isLoading) => {
-    popupButton.forEach(button => {
+    popupButtonSave.forEach(button => {
         if (isLoading) {
             button.textContent = 'Сохранение...';
         } else {
@@ -207,16 +204,33 @@ const renderLoading = (isLoading) => {
     });
 }
 
-//попап подтверждения удаления карточки
+const popupTypeAgreement = document.querySelector('.popup_delete-agreement')
 
+formElementAgreement.addEventListener('submit', removeCardNew);
 
-
-formElementAgreement.addEventListener('submit', (evt) => {
-    evt.preventDefault();
-    const cardId = formElementAgreement.querySelector('input[name="card-id"]').value;
+function removeCardNew(evt) {
+    evt.preventDefault(); 
     
-    console.log(cardId);
-    removeCard; // как она понимает какую карту удалить? может нужно просто ();
-    closePopup(evt.target.closest('.popup'));
-});
+    if (!cardForDeleteId || !cardForDeleteElement) {
+        return
+    };
 
+    deleteCard(cardForDeleteId)
+        .then(() => {
+            cardForDeleteElement.remove();
+            closePopup(popupTypeAgreement);
+        })
+        .catch((err) => {
+            console.log(err);
+        })
+        .finally(() => {
+            cardForDeleteElement = null;
+            cardForDeleteId = null;
+        });
+}
+
+function handleDeleteButtonClick(cardId, cardElement) {
+    cardForDeleteElement = cardElement;
+    cardForDeleteId = cardId;
+    openPopup(popupTypeAgreement);
+}

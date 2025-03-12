@@ -15,7 +15,8 @@ export function toggleLike(event, cardData, userId) {
         });
 }
 
-export function buildCard(cardData, handleCardImageClick, handleCardLikeButtonClick, userId, deleteButton) {
+
+export function buildCard(cardData, handleDeleteButtonClick, handleCardImageClick, handleCardLikeButtonClick, userId) {
     const cardTemplate = document.querySelector('#card-template').content;
 
     const cardElement = cardTemplate.querySelector('.card').cloneNode(true);
@@ -41,13 +42,19 @@ export function buildCard(cardData, handleCardImageClick, handleCardLikeButtonCl
     const cardLikeSum = cardElement.querySelector('.card__like-sum');
     cardLikeSum.textContent = cardData.likes.length;
 
+    const cardDeleteButton = cardElement.querySelector('.card__delete-button');
 
     if (cardData.owner._id !== userId) {
-        deleteButton.style.display = 'none';
-    } 
+        cardDeleteButton.style.display = 'none';
+    } else {
+        cardDeleteButton.addEventListener('click', () => {
+            handleDeleteButtonClick(cardData._id, cardElement);
+        });
+    }
 
     return cardElement;
 }
+
 
 
 export function removeCard(cardElement, cardId) {
