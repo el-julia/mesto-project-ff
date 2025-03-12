@@ -1,5 +1,5 @@
 import '../pages/index.css';
-import { buildCard, toggleLike } from './card.js';
+import { buildCard, removeCard, toggleLike } from './card.js';
 import { openPopup, closePopup, closePopupOnOverlayClick } from './modal.js';
 import { enableValidation, clearValidation } from './validation.js';
 import { getInitialCards, getUserInformation, addNewCard, updateUserData, updateAvatar, deleteCard } from './api.js';
@@ -119,36 +119,36 @@ const formElementCard = document.querySelector('form[name="new-place"]');
 const inputCardName = document.querySelector('.popup__input_type_card-name');
 const inputCardUrl = document.querySelector('.popup__input_type_url');
 
-function handleCardFormSubmit(evt, userId) { 
- 
-    evt.preventDefault(); 
-    renderLoading(true); 
-    const cardNameValue = inputCardName.value; 
-    const cardUrlValue = inputCardUrl.value; 
- 
-    addNewCard(cardNameValue, cardUrlValue) 
-        .then((newNewCard) => { 
-            const newCard = buildCard( 
-                newNewCard, 
-                handleDeleteButtonClick, 
-                handleCardImageClick, 
-                toggleLike, 
-                userId, 
-            ) 
- 
-            placesList.prepend(newCard); 
-            formElementCard.reset(); 
-            closePopup(evt.target.closest('.popup')); 
- 
-        }) 
-        .catch((err) => { 
-            console.log(err); 
-        }) 
-        .finally(() => { 
-            renderLoading(false); 
-        }); 
- 
-} 
+function handleCardFormSubmit(evt, userId) {
+
+    evt.preventDefault();
+    renderLoading(true);
+    const cardNameValue = inputCardName.value;
+    const cardUrlValue = inputCardUrl.value;
+
+    addNewCard(cardNameValue, cardUrlValue)
+        .then((newNewCard) => {
+            const newCard = buildCard(
+                newNewCard,
+                handleDeleteButtonClick,
+                handleCardImageClick,
+                toggleLike,
+                userId,
+            )
+
+            placesList.prepend(newCard);
+            formElementCard.reset();
+            closePopup(evt.target.closest('.popup'));
+
+        })
+        .catch((err) => {
+            console.log(err);
+        })
+        .finally(() => {
+            renderLoading(false);
+        });
+
+}
 
 function handleCardImageClick(cardData) {
     popupImage.src = cardData.link;
@@ -193,7 +193,6 @@ function initCards(userId) {
 }
 const popupButtonSave = document.querySelectorAll('.popup__button-save');
 
-// как повлияет на кнопку Да?
 const renderLoading = (isLoading) => {
     popupButtonSave.forEach(button => {
         if (isLoading) {
@@ -209,24 +208,15 @@ const popupTypeAgreement = document.querySelector('.popup_delete-agreement')
 formElementAgreement.addEventListener('submit', removeCardNew);
 
 function removeCardNew(evt) {
-    evt.preventDefault(); 
-    
+    evt.preventDefault();
+
     if (!cardForDeleteId || !cardForDeleteElement) {
         return
-    };
+    }
 
-    deleteCard(cardForDeleteId)
-        .then(() => {
-            cardForDeleteElement.remove();
-            closePopup(popupTypeAgreement);
-        })
-        .catch((err) => {
-            console.log(err);
-        })
-        .finally(() => {
-            cardForDeleteElement = null;
-            cardForDeleteId = null;
-        });
+    removeCard(cardForDeleteElement, cardForDeleteId, () => {
+        closePopup(popupTypeAgreement)
+    });
 }
 
 function handleDeleteButtonClick(cardId, cardElement) {

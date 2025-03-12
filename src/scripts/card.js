@@ -1,14 +1,14 @@
 import { deleteCard, updateLikeCard } from './api.js';
 
 
-export function toggleLike(event, cardData, userId) {
+export function toggleLike(cardData, userId, likeButtonElement, likeCounterElement) {
     const isLiked = cardData.likes.some(like => like._id === userId);
 
     updateLikeCard(cardData._id, isLiked)
         .then((updatedCard) => {
             cardData.likes = updatedCard.likes;
-            event.target.classList.toggle('card__like-button_is-active', !isLiked);
-            event.target.nextElementSibling.textContent = updatedCard.likes.length;
+            likeButtonElement.classList.toggle('card__like-button_is-active', !isLiked);
+            likeCounterElement.textContent = updatedCard.likes.length;
         })
         .catch((err) => {
             console.log(err);
@@ -57,10 +57,11 @@ export function buildCard(cardData, handleDeleteButtonClick, handleCardImageClic
 
 
 
-export function removeCard(cardElement, cardId) {
+export function removeCard(cardElement, cardId, afterRemove) {
     deleteCard(cardId)
         .then(() => {
             cardElement.remove();
+            afterRemove();
         })
         .catch((err) => {
             console.log(err);

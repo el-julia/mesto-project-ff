@@ -66,7 +66,7 @@ const updateAvatar = (avatar) => {
 
         headers: config.headers
     })
-    .then(res => processResponse(res));
+        .then(res => processResponse(res));
 }
 
 const deleteCard = (cardId) => {
@@ -74,7 +74,7 @@ const deleteCard = (cardId) => {
         method: "DELETE",
         headers: config.headers
     })
-        .then(res => 
+        .then(res =>
             processResponse(res));
 
 }
